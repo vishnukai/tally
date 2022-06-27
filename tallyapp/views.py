@@ -87,6 +87,7 @@ def voucher(request,id):
     bak=bank.objects.get(id=id)
     uid=bak.amount.id
     
+    
     if contra.objects.filter(amount=uid).exists():
         con=contra.objects.get(amount=uid)
         led=ledger.objects.all()     
@@ -406,6 +407,8 @@ def savereceiptbank(request,id):
         transaction=request.POST.get('transaction')
         trans=transactiontype.objects.get(transactiontype=transaction)
         rec=bankreceipt(ledger=led,date=acc,amount=par,instno=instno,instdate=instdate,transactiontype=trans)
+        bak=bank.objects.get(id=id)
+        bak.delete()
         rec.save()
 
         return redirect('home')
@@ -428,6 +431,7 @@ def monthlysummary(request, id):
     print(a)
     b=dict(a)
     print(b)
+    
     for keys, values in b.items():
         print(values.month)   
     
@@ -535,9 +539,108 @@ def monthlysummary(request, id):
         else:
             pass
     print(month)
+    amount=bankreceipt.objects.filter(ledger=id).values('instdate','amount')
+    
+    
+   
+
+    total={}
+    ma=0
+    j=0
+    ju=0
+    au=0
+    s=0
+    o=0
+    n=0
+    de=0
+    j=0
+    f=0
+    mar=0
+    ap=0
+      
 
 
-    return render(request,'montlysummary.html',{'month':month})
+
+    for course in amount:
+        for i in range(1,13):
+            if i==(course['instdate'].month):
+                if (course['instdate'].day)>=todays_date.day:
+                    i=course['amount']
+                    par=Particulars.objects.get(id=i)
+                    j=j+par.amount
+                    total[i]=j
+                
+            elif i==(course['instdate'].month):
+                if(course['instdate'].day)>=todays_date.day:
+                    i=course['amount']
+                    par=Particulars.objects.get(id=i)
+                    f=f+par.amount
+                    total[i]=f
+            elif i==(course['instdate'].month):
+                if (course['instdate'].day)>=todays_date.day:
+                    mar=mar+course['amount']
+                    total[i]=mar
+            elif i==(course['instdate'].month):
+                if (course['instdate'].day)>=todays_date.day:
+                    i=course['amount']
+                    par=Particulars.objects.get(id=i)
+                    ap=ap+par.amount
+                    total[i]=ap
+            elif i==(course['instdate'].month):
+                if (course['instdate'].day)>=todays_date.day:
+                    i=course['amount']
+                    par=Particulars.objects.get(id=i)
+                    ma=ma+par.amount
+                    total[i]=ma
+            elif i==(course['instdate'].month):
+                if (course['instdate'].day)>=todays_date.day:
+                    i=course['amount']
+                    par=Particulars.objects.get(id=i)
+                    j=j+par.amount
+                    total[i]=j
+
+            elif i==(course['instdate'].month):
+                if (course['instdate'].day)>=todays_date.day:
+                    i=course['amount']
+                    par=Particulars.objects.get(id=i)
+                    ju=ju+par.amount
+                    total[i]=ju
+            elif i==(course['instdate'].month):
+                if (course['instdate'].day)>=todays_date.day:
+                    i=course['amount']
+                    par=Particulars.objects.get(id=i)
+                    au=au+par.amount
+                    total[i]=au
+            elif i==(course['instdate'].month):
+                if (course['instdate'].day)>todays_date.day:
+                    i=course['amount']
+                    par=Particulars.objects.get(id=i)
+                    s=s+par.amount
+                    total[i]=s
+            elif i==(course['instdate'].month):
+                if (course['instdate'].day)>=todays_date.day:
+                    i=course['amount']
+                    par=Particulars.objects.get(id=i)
+                    o=o+par.amount
+                    total[i]=o
+            elif i==(course['instdate'].month):
+                if (course['instdate'].day)>=todays_date.day:
+                    i=course['amount']
+                    par=Particulars.objects.get(id=i)
+                    n=n+par.amount
+                    total[i]=n
+            elif i==(course['instdate'].month):
+                if(course['instdate'].day)>=todays_date.day:
+                    i=course['amount']
+                    par=Particulars.objects.get(id=i)
+                    de=de+par.amount
+                    total[i]=de
+            else:
+                pass
+    bak=bankreceipt.objects.get(ledger=id)
+    print(total)
+    print(amount)
+    return render(request,'montlysummary.html',{'month':month,'total':total,'bak':bak})
 
 
 
