@@ -221,6 +221,7 @@ def changepayment(request,id):
             no=con.no+1
     except:
         no=1
+    print(no)
        
     return render(request,'convertcontra.html',{'bak':bak,'type':type,'led':led,'con':no})
 
