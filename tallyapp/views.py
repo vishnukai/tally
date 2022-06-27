@@ -433,10 +433,6 @@ def monthlysummary(request, id):
     
         
         print(values.day)
-        
-
-    
-    
 
     todays_date = datetime.date.today()
     fiscalyear.setup_fiscal_calendar(start_month=4)
