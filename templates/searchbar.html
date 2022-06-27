@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+% load_static %}
+{% block body %}
+
+
+<div class="container-fluid">
+    <div class="col-sm-12" style="text-align:center;">
+        <div class="row">
+        <div class="col-sm-2">
+
+        </div>
+        <div class="col-sm-8">
+            <h4>Name of banks</h4>
+            
+        <input type="text" id="myInput" onkeyup="myFunction()"   title="Type in a name" placeholder="Name of Bank">
+
+        <ul id="myUL">
+            <h4>List of banks</h4>
+            <li><a href="">Create</a></li>
+          
+          {% for led in l %}
+          <li><a href="{% url 'chequep' led.id %}">{{  led.name }}</a></li>
+     
+          {% endfor %}
+ 
+        </ul>
+        
+        <script>
+        function myFunction() {
+            var input, filter, ul, li, a, i, txtValue;
+            input = document.getElementById("myInput");
+            filter = input.value.toUpperCase();
+            ul = document.getElementById("myUL");
+            li = ul.getElementsByTagName("li");
+            for (i = 0; i < li.length; i++) {
+                a = li[i].getElementsByTagName("a")[0];
+                txtValue = a.textContent || a.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    li[i].style.display = "";
+                } else {
+                    li[i].style.display = "none";
+                }
+            }
+        }
+        </script>
+
+    </div>
+    <div class="col-sm-2">
+
+    </div>
+</div>
+</div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}

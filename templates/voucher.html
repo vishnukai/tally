@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% block body %}
+{% load static %}
+
+<div class="container-fluid">
+ <div class="col-sm-12">
+
+
+    <table style="width:1%">
+        <thead>
+            <tr>
+                <th><button style="background-color:#2f516f;border:none;" ><a href="{% url 'changepayment' bak.id %}" style="background-color:#2f516f;color:white;">Payment</a></button></th>
+                
+                <th><button style="background-color:#2f516f;border:none;"><a href="{% url 'changerecipt' bak.id %}" style="background-color:#2f516f;color:white;">Receipt</a></button></th>
+               
+                <th><button style="background-color:#2f516f;border:none;"><a  style="background-color:#2f516f;color:white;">Purchase</a></button></th>
+                <th><button style="background-color:#2f516f;border:none;"><a  style="background-color:#2f516f;color:white;">Journal</a></button></th>
+            </tr>
+            </tr>
+        </thead>
+    </table><br>
+    <form method="POST" action="{% url 'updatepayment' bak.id %}">
+        {% csrf_token %}
+    <div class="row">
+        <div class="col-sm-6">
+      <h1>Contra</h1><h4>No.{{con.no}}   </h4>
+    </div>
+    <div class="col-sm-6" style="text-align:right">
+        <h4><input name="date" type="date" value="{{bak.date.date|date:"Y-m-d" }}"></h4>
+        <h4>{{bak.date.date | date:"l"}}</h4>
+      
+           
+      </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+        Account:
+        <input list="ledger" name="accot" placeholder="Enter the account" onkeyup="myFunction()" value="{{bak.date.account}}" style="background:#2f516f;border:none;color:white">
+        <datalist id="ledger">
+
+          
+           <ul id="myUL">
+               
+                  
+              <select name="particulars">
+          
+               {% for led in led %}
+               <option > 
+             <li >{{  led.name }}</li></option>
+             {% endfor %}    
+            <option> <li><a href="">Create</a></li></option>
+           </select>
+           
+           </ul>      
+           
+        </datalist>  
+
+        </div>
+
+    </div>
+    <div class="table-responsive">
+        <table class="table table-responsive-md table-hover mt-4">
+            <thead>
+
+                <tr></tr>
+                <tr>
+                    <th>
+                        Particulars
+                    </th>
+                    
+                    <th style="text-align:right;">
+                       Amount
+                    </th>
+                </tr>
+              
+            </thead>
+
+            <tbody>
+  
+  
+   
+                <tr>
+                    <th> 
+                     <input list="ledger" name="part" placeholder="Enter the Particulars" onkeyup="myFunction()" value="{{bak.amount.particualrs}}" style="background:#2f516f;border:none;color:white">
+                     <datalist id="ledger">
+           
+                       
+                        <ul id="myUL">
+                            
+                               
+                           <select name="particulars">
+                       
+                            {% for led in led %}
+                            <option value="{{led.id}}" > 
+                          <li >{{  led.name }}</li></option>
+                          {% endfor %}    
+                         <option> <li><a href="">Create</a></li></option>
+                        </select>
+                        
+                        </ul>      
+                        
+                     </datalist>  
+                      
+                     
+                    </th>
+                   
+                    <th style="text-align:right;">
+                        
+                       <input type="integer" value="{{bak.amount.amount}}"  name="amount" style="background:#2f516f;border:none;text-align:right;color:white">
+                    </th>
+                </tr>
+                <tr>
+                    <th >
+                      
+                     Narration
+                    </th>
+                   
+                    <th style="text-align:right;">
+                        {{bak.amount.amount}}
+                        
+                       
+                    </th>
+                </tr>
+                
+                
+             
+          
+                
+            </tbody>
+        </table>
+    </div>
+    <div class="row" style="display:flex-end" >
+        <div class="col-sm-12" style="text-align:right"><input type="submit" value="Save" ></div>
+        
+
+    </div>
+
+
+ </div>   
+
+
+
+</div>
+</form>
+{% endblock %}

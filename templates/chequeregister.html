@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+% load_static %}
+{% block body %}
+<div class="container-fluid">
+    <div class="col-sm-12">
+        <div class=row>
+            <div class="col-sm-12">
+                <div class="row">
+                <div class="col-sm-6">
+            <h4 style="font-size:15px;">Bank wise Register</h4>
+
+        </div>
+        <div class="col-sm-6" style="text-align:right">
+            <h4 style="font-size:15px;">1-Apr-2022</h4>
+
+        </div>
+        </div>
+    </div>
+        
+<div class="table-responsive">
+        <table class="table table-responsive-md table-hover mt-4">
+            <thead>
+                <tr>
+                    <th>
+                        Particulars
+                    </th>
+                    <th>
+                       Available Cheques
+                    </th>
+                    <th >
+                      Blank
+                    </th>
+                    <th >
+                       Cancelled
+                      </th>
+                    <th>
+                        Out of Period
+                    </th>
+                    <th>
+                        Total Cheques
+                    </th>
+                </tr>
+              
+            </thead>
+
+            <tbody>
+  
+   {% for b in l %}
+   {% for bak in bak %}
+   {% if bak.id == b.ledger %}   
+                <tr>
+                    <th>
+                      
+                    <a href = "{% url 'instrument' bak.id %}" >{{bak}}</a> 
+                    </th>
+                    <th>
+                       Available Cheques
+                    </th>
+                    <th >
+                      Blank
+                    </th>
+                    <th >
+                       Cancelled
+                      </th>
+                    <th>
+                        Out of Period
+                    </th>
+                    <th>
+                        
+                       {{b.total}}
+                   
+                    </th>
+                </tr>
+                {% endif %}
+                {% endfor %}
+             
+              {% endfor %}
+                
+            </tbody>
+        </table>
+    </div>
+
+
+
+
+
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+% load_static %}
+{% block body %}
+
+<div  >
+    <table style="width:100%;margin:auto;" >
+<thead >
+  <tr >
+      <th rowspan="4" colspan="4" style=" border: 1px solid #fff;border-collapse: collapse; padding: 15px;">Particulars</th>
+     
+
+
+  </tr>
+  <tr  >
+    <th style=" border: 1px solid #fff;border-collapse: collapse; padding: 15px;text-align: center;" colspan="4">Federal bank<br> Company name <br>1-Apr-2022 to 31-Mar-23 </th>
+
+    
+    
+
+   
+
+  </tr>
+
+
+  <tr>
+    <th style=" border: 1px solid #fff;border-collapse: collapse; padding: 15px;text-align: center;" colspan="2">Recived</th>
+    <th style=" border: 1px solid #fff;border-collapse: collapse; padding: 15px;text-align: center;" colspan="2">Issued</th>
+
+  </tr>
+  <tr style=" border: 1px solid #fff;border-collapse: collapse;">
+    <th style=" border: 1px solid #fff;border-collapse: collapse; padding: 15px;text-align: center;" >Amount</th>
+    <th style=" border: 1px solid #fff;border-collapse: collapse; padding: 15px;text-align: center;">Count</th>
+    <th style=" border: 1px solid #fff;border-collapse: collapse; padding: 15px;text-align: center;">Amount</th>
+    <th style=" border: 1px solid #fff;border-collapse: collapse; padding: 15px;text-align: center;">Count</th>
+  </tr>
+
+
+
+
+
+
+
+
+</thead>
+<tbody>
+    {% for a in a %}
+    <tr>
+        <td colspan="4"  style=" border-left: 1px solid #fff;border-bottom:1px solid #fff;border-collapse: collapse; padding: 15px;text-align: left;">
+            {{a.instdate}}
+
+        </td>
+
+
+        <td style="border-left:0px;border-bottom:1px solid #fff;border-collapse: collapse; padding: 15px;text-align: center;">
+            40000
+
+        </td>
+        <td style="border-left:0px;border-bottom:1px solid #fff;border-collapse: collapse; padding: 15px;text-align: center;">
+            40000
+        </td>
+        <td style=" border-left:0px;border-bottom:1px solid #fff;border-collapse: collapse; padding: 15px;text-align: center;">
+            40000
+        </td> 
+        <td style=" border-left:0px;border-bottom:1px solid #fff;border-collapse: collapse; padding: 15px;text-align: center;">
+            40000
+        </td>
+    </tr>
+  {% endfor %}
+
+</tbody>
+
+</table>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}

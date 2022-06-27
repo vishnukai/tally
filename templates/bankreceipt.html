@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block body %}
+{% load static %}
+<form action="{% url 'savereceiptbank' bak.id %}" method="POST">
+    {% csrf_token %}
+    
+<div class="table-responsive">
+    <table class="table table-responsive-md table-hover mt-4">
+    <thead>
+         <tr>
+       <th>Transactiontype</th>
+        <th>Instno</th>
+        <th>Instdate</th>
+        <th>Amount</th>
+        
+
+    </tr>
+    </thead>
+    <tbody>
+     
+        <tr>
+            <td>
+                <input list="transaction" name="transaction" placeholder="Enter the transactiontype" onkeyup="myFunction()" value="{{bak.transactiontype.transactiontype}}" style="background:#2f516f;border:none;color:white">
+                <datalist id="transaction">
+      
+                  
+                   <ul id="myUL">
+                       
+                          
+                      <select >
+                  
+                       {% for led in tran %}
+                       <option > 
+                     <li >{{  led.transactiontype }}</li></option>
+                     {% endfor %}    
+                    <option> <li><a href="">Create</a></li></option>
+                   </select>
+                   
+                   </ul>      
+                   
+                </datalist>  
+            </td>
+
+         <td><input name="instno" type="number " value="{{bak.instno}}"></td> 
+         <td><input name="date" type="date" value="{{bak.instdate|date:"Y-m-d" }}"></td> 
+         <td><input name =amount type="number" value={{bak.amount.amount}}></td>
+        
+        </tr>   
+       
+    </tbody>
+      </table>
+        </div>
+
+
+    <div class="col-sm-12">
+        <input type="submit" value="Save">
+
+    </div>
+
+
+
+
+    </form>
+
+
+
+
+{% endblock %}

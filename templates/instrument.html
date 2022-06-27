@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+% load_static %}
+{% block body %}
+<div class="container-fluid" style="display:flex;">
+<div class="col-sm-12">
+    <div class=row>
+    <div class="col-sm-6">
+        {% for bak in bank|slice:":1" %}
+Ledger: {{bak.amount.particualrs}}
+
+{% endfor %}
+    </div>
+    <div class="col-sm-6" style="text-align:right;">
+        1-Apr-2022
+
+    </div>
+
+
+
+
+</div>
+<div class="row">
+    <div class="col-sm-12" style="text-align:center;">
+      <b>  (Bank not Configured for Cheque Printing)</b>
+    </div>
+
+</div>
+
+<div class="table-responsive">
+
+<table  class="table table-responsive-md table-hover mt-4">
+ <thead>   <tr>
+   
+        <th >
+         Cheque No.
+
+        </th>
+        <th>
+           Statuc
+        </th>
+        <th>
+            Date
+
+        </th>
+        <th>
+            Particulars
+
+        </th>
+        <th>
+            Vouch No.
+            
+        </th>
+        <th>
+           Inst.Date
+            
+        </th>
+        <th>
+            Amount             
+         </th>
+    </tr>
+</thead>
+<tbody>
+    {% for bank in bank %}
+          
+    {% for con in con %}
+    {% if con.date == bank.date %}
+   
+    <tr>
+
+        <td>
+            nil
+        </td>
+        <td>
+        unreconcilled
+        </td>
+        <td>
+            {{bank.date.date}}
+            
+        </td>
+        <td>
+            <a href="{% url 'voucher' bank.id %}">   {{bank.amount.particualrs}}</a> 
+        </td>
+         
+        <td>
+         {{con.no}}
+        </td>
+       
+     
+        
+           
+       
+           <td>
+            {{bank.instno}}
+             
+           
+        </td>
+        
+        <td >
+            {{bank.amount.amount}}
+        </td>
+    </tr>
+    {% endif %}
+    {% endfor %}
+
+
+    {% for pay in pay %}
+    {% if pay.date == bank.date %}
+    <tr>
+
+        <td>
+            nil
+        </td>
+        <td>
+        unreconcilled
+        </td>
+        <td>
+            {{bank.date.date}}
+            
+        </td>
+        <td>
+            <a href="{% url 'voucher' bank.id %}">   {{bank.amount.particualrs}}</a> 
+        </td>
+         
+        <td>
+            {{pay.no}}
+        </td>
+
+     
+       
+     
+           
+       
+           <td>
+            {{bank.instno}}
+             
+           
+        </td>
+        
+        <td >
+            {{bank.amount.amount}}
+        </td>
+    </tr>
+    {% endif %}
+    {% endfor %}
+ 
+
+
+    {% endfor %}
+ 
+ 
+
+    <tr>
+        <td class="total-column" colspan="6">
+        Total
+        </td>
+        <td>
+                   
+          {{sum}}
+        </td>
+        
+    </tr>
+
+</tbody>
+</table>
+
+
+
+</div>
+
+</div>
+</div>
+
+
+
+
+ {% endblock %}
