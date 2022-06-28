@@ -442,10 +442,10 @@ def monthlysummary(request, id):
     fiscalyear.setup_fiscal_calendar(start_month=4)
     fy = FiscalYear.current()
     current_fiscal_year = FiscalYear.current()
-    d = datetime.datetime(current_fiscal_year.start.year, current_fiscal_year.start.month, current_fiscal_year.start.day)
-    for m in range(0, 12):
-        next_month_start = d + relativedelta.relativedelta(months=m, day=1)
-        print(next_month_start.strftime('%Y-%m-%d'))
+    # d = datetime.datetime(current_fiscal_year.start.year, current_fiscal_year.start.month, current_fiscal_year.start.day)
+    # for m in range(0, 12):
+    #     next_month_start = d + relativedelta.relativedelta(months=m, day=1)
+    #     print(next_month_start.strftime('%Y-%m-%d'))
     month={}
     may=0
     june=0
@@ -461,80 +461,119 @@ def monthlysummary(request, id):
     print(todays_date.day)
     
     for keys, values in b.items():    
-      for i in range(1,13):
-        if i==values.month:
-            if values.day >= todays_date.day:
+      
+        if 1==values.month:
+            if values.month > todays_date.month:
                 jan=jan+1
-                month[i]=jan
+                month[1]=jan
+            elif values.day>=todays_date.day:
+                jan=jan+1
+                month[1]=jan
             else:
+
                 pass
 
-        elif i==values.month:
-            if values.day >= todays_date.day:
+        elif 2==values.month:
+            if values.month > todays_date.month:
                 feb=feb+1
-                month[i]=feb
+                month[2]=feb
+            elif values.day >= todays_date.day:
+                feb=feb+1
+                month[2]=feb
             else:
                 pass
             
-        elif i==values.month:
-            if values.day >= todays_date.day:
+        elif 3==values.month:
+            if values.month > todays_date.month:
                 march=march+1
-                month[i]=march
+                month[3]=march
+            elif values.day >= todays_date.day:
+                march=march+1
+                month[3]=march
             else:
                 pass
-        elif i==values.month:
-             if values.day >= todays_date.day:
+        elif 4==values.month:
+            if values.month > todays_date.month:
                 april=april+1
-                month[i]=april
-             else:
+                month[4]=april
+            elif values.day >= todays_date.day:
+                april=april+1
+                month[4]=april
+            else:
                 pass
-        elif i==values.month:
-             if values.day >= todays_date.day:
+        elif 5==values.month:
+            if values.month > todays_date.month:
                 may=may+1
-                month[i]=may
-             else:
+                month[5]=may
+            elif values.day >= todays_date.day:
+                may=may+1
+                month[5]=may
+            else:
                 pass
-        elif i==values.month:
-            if values.day >= todays_date.day:
+        elif 6==values.month:
+            if values.month > todays_date.month:
                 june=june+1
-                month[i]=june
+                month[6]=june
+            elif values.day >= todays_date.day:
+                june=june+1
+                month[6]=june
             else:
                 pass
-        elif i==values.month:
-            if  values.day >= todays_date.day:
+        elif 7==values.month:
+            if values.month > todays_date.month:
                 july=july+1
-                month[i]=july
+                month[7]=july
+                print(july)
+            elif  values.day >= todays_date.day:
+                july=july+1
+                month[7]=july
+                print(july)
             else:
                 pass
-        elif i==values.month:
-             if values.day >= todays_date.day:
+        elif 8==values.month:
+            if values.month > todays_date.month:
                 august=august+1
-                month[i]=august
-             else:
-                pass
-        elif i==values.month:
-             if values.day >= todays_date.day:
-                sep=sep+1
-                month[i]=sep
-             else:
-                pass
-        elif i==values.month:
-            if values.day >= todays_date.day:
-                oct=oct+1
-                month[i]=oct
+                month[8]=august
+            elif values.day >= todays_date.day:
+                august=august+1
+                month[8]=august
             else:
                 pass
-        elif i==values.month:
-             if values.day >= todays_date.day:
-                nov=nov+1
-                month[i]=nov
-             else:
+        elif 9==values.month:
+            if values.month > todays_date.month:
+                sep=sep+1
+                month[9]=sep
+            elif values.day >= todays_date.day:
+                sep=sep+1
+                month[9]=sep
+            else:
                 pass
-        elif i==values.month:
-             if values.day>= todays_date.day:
-              dec=dec+1
-              month[i]=dec
-             else:
+        elif 10==values.month:
+            if values.month > todays_date.month:
+                oct=oct+1
+                month[10]=oct
+            elif values.day >= todays_date.day:
+                oct=oct+1
+                month[10]=oct
+            else:
+                pass
+        elif 11==values.month:
+            if values.month > todays_date.month:
+                nov=nov+1
+                month[11]=nov
+            elif values.day >= todays_date.day:
+                nov=nov+1
+                month[11]=nov
+            else:
+                pass
+        elif 12==values.month:
+            if values.month > todays_date.month:
+                dec=dec+1
+                month[12]=dec
+            elif values.day>= todays_date.day:
+                dec=dec+1
+                month[12]=dec
+            else:
                 pass
         else:
             pass
@@ -564,84 +603,184 @@ def monthlysummary(request, id):
     for course in amount:
         for i in range(1,13):
             if i==(course['instdate'].month):
-                if (course['instdate'].day)>=todays_date.day:
-                    i=course['amount']
-                    par=Particulars.objects.get(id=i)
+                if (course['instdate'].month)>todays_date.month:
+                    e=course['amount']
+                    par=Particulars.objects.get(id=e)
                     j=j+par.amount
                     total[i]=j
+                elif (course['instdate'].day)>=todays_date.day:
+                    e=course['amount']
+                    par=Particulars.objects.get(id=e)
+                    j=j+par.amount
+                    total[i]=j
+                else:
+                    pass
+
                 
             elif i==(course['instdate'].month):
-                if(course['instdate'].day)>=todays_date.day:
-                    i=course['amount']
-                    par=Particulars.objects.get(id=i)
+                if (course['instdate'].month)>todays_date.month:
+                    e=course['amount']
+                    par=Particulars.objects.get(id=e)
                     f=f+par.amount
                     total[i]=f
+                
+                elif(course['instdate'].day)>=todays_date.day:
+                    e=course['amount']
+                    par=Particulars.objects.get(id=e)
+                    f=f+par.amount
+                    total[i]=f
+                else:
+                    pass
             elif i==(course['instdate'].month):
-                if (course['instdate'].day)>=todays_date.day:
-                    mar=mar+course['amount']
+                if (course['instdate'].month)>todays_date.month:
+                    e=course['amount']
+                    par=Particulars.objects.get(id=e)
+                    mar=mar+par.amount
                     total[i]=mar
+                elif (course['instdate'].day)>=todays_date.day:
+                    e=course['amount']
+                    par=Particulars.objects.get(id=e)
+                    mar=mar+par.amount
+                    total[i]=mar
+                else:
+                    pass
             elif i==(course['instdate'].month):
-                if (course['instdate'].day)>=todays_date.day:
-                    i=course['amount']
-                    par=Particulars.objects.get(id=i)
+                if (course['instdate'].month)>todays_date.month:
+                    e=course['amount']
+                    par=Particulars.objects.get(id=e)
                     ap=ap+par.amount
                     total[i]=ap
+                elif (course['instdate'].day)>=todays_date.day:
+                    e=course['amount']
+                    par=Particulars.objects.get(id=e)
+                    ap=ap+par.amount
+                    total[i]=ap
+                else:
+                    pass
             elif i==(course['instdate'].month):
-                if (course['instdate'].day)>=todays_date.day:
-                    i=course['amount']
-                    par=Particulars.objects.get(id=i)
+                if (course['instdate'].month)>todays_date.month:
+                    e=course['amount']
+                    par=Particulars.objects.get(id=e)
                     ma=ma+par.amount
                     total[i]=ma
+                elif (course['instdate'].day)>=todays_date.day:
+                    e=course['amount']
+                    par=Particulars.objects.get(id=e)
+                    ma=ma+par.amount
+                    total[i]=ma
+                else:
+                    pass
             elif i==(course['instdate'].month):
-                if (course['instdate'].day)>=todays_date.day:
-                    i=course['amount']
-                    par=Particulars.objects.get(id=i)
+                if (course['instdate'].month)>todays_date.month:
+                    e=course['amount']
+                    par=Particulars.objects.get(id=e)
                     j=j+par.amount
                     total[i]=j
+                elif (course['instdate'].day)>=todays_date.day:
+                    e=course['amount']
+                    par=Particulars.objects.get(id=e)
+                    j=j+par.amount
+                    total[i]=j
+                else:
+                    pass
 
             elif i==(course['instdate'].month):
-                if (course['instdate'].day)>=todays_date.day:
-                    i=course['amount']
-                    par=Particulars.objects.get(id=i)
+                if (course['instdate'].month)>todays_date.month:
+                    e=course['amount']
+                    par=Particulars.objects.get(id=e)
                     ju=ju+par.amount
                     total[i]=ju
+                elif (course['instdate'].day)>=todays_date.day:
+                    e=course['amount']
+                    par=Particulars.objects.get(id=e)
+                    ju=ju+par.amount
+                    total[i]=ju
+                else:
+                    pass
             elif i==(course['instdate'].month):
-                if (course['instdate'].day)>=todays_date.day:
-                    i=course['amount']
-                    par=Particulars.objects.get(id=i)
+                if (course['instdate'].month)>todays_date.month:
+                    e=course['amount']
+                    par=Particulars.objects.get(id=e)
                     au=au+par.amount
                     total[i]=au
+                elif (course['instdate'].day)>=todays_date.day:
+                    e=course['amount']
+                    par=Particulars.objects.get(id=e)
+                    au=au+par.amount
+                    total[i]=au
+                else:
+                    pass
             elif i==(course['instdate'].month):
-                if (course['instdate'].day)>todays_date.day:
-                    i=course['amount']
-                    par=Particulars.objects.get(id=i)
+                if (course['instdate'].month)>todays_date.month:
+                    e=course['amount']
+                    par=Particulars.objects.get(id=e)
                     s=s+par.amount
                     total[i]=s
+                elif (course['instdate'].day)>todays_date.day:
+                    e=course['amount']
+                    par=Particulars.objects.get(id=e)
+                    s=s+par.amount
+                    total[i]=s
+                else:
+                    pass
             elif i==(course['instdate'].month):
-                if (course['instdate'].day)>=todays_date.day:
-                    i=course['amount']
-                    par=Particulars.objects.get(id=i)
+                if (course['instdate'].month)>todays_date.month:
+                    e=course['amount']
+                    par=Particulars.objects.get(id=e)
                     o=o+par.amount
                     total[i]=o
+                elif (course['instdate'].day)>=todays_date.day:
+                    e=course['amount']
+                    par=Particulars.objects.get(id=e)
+                    o=o+par.amount
+                    total[i]=o
+                else:
+                    pass
             elif i==(course['instdate'].month):
-                if (course['instdate'].day)>=todays_date.day:
-                    i=course['amount']
-                    par=Particulars.objects.get(id=i)
+                if (course['instdate'].month)>todays_date.month:
+                    e=course['amount']
+                    par=Particulars.objects.get(id=e)
                     n=n+par.amount
                     total[i]=n
+                elif (course['instdate'].day)>=todays_date.day:
+                    e=course['amount']
+                    par=Particulars.objects.get(id=e)
+                    n=n+par.amount
+                    total[i]=n
+                else:
+                    pass
             elif i==(course['instdate'].month):
-                if(course['instdate'].day)>=todays_date.day:
-                    i=course['amount']
-                    par=Particulars.objects.get(id=i)
+                if (course['instdate'].month)>todays_date.month:
+                    e=course['amount']
+                    par=Particulars.objects.get(id=e)
+                    de=de+par.amount
+                    total[i]=de
+                elif(course['instdate'].day)>=todays_date.day:
+                    e=course['amount']
+                    par=Particulars.objects.get(id=e)
                     de=de+par.amount
                     total[i]=de
             else:
                 pass
-    bak=bankreceipt.objects.get(ledger=id)
+    bak=bankreceipt.objects.filter(ledger=id)
     print(total)
     print(amount)
-    return render(request,'montlysummary.html',{'month':month,'total':total,'bak':bak})
+    return render(request,'montlysummary.html',{'month':month,'total':total,'bak':bak,'id':id})
 
+def getjune(request,id):
+    fiscalyear.setup_fiscal_calendar(start_month=6)
+    fy = FiscalYear.current()
+    current_fiscal_year = FiscalYear.current()
+    d = datetime.datetime(current_fiscal_year.start.year, current_fiscal_year.start.month, current_fiscal_year.start.day)
+    for m in range(0, 1):
+        for n in range(0,1):
+            next_month_start = d + relativedelta.relativedelta(months=m, day=1)
+            next_month_end = d + relativedelta.relativedelta(months=n, day=30)
+            print(next_month_start.strftime('%Y-%m-%d'))
+            print(next_month_end.strftime('%Y-%m-%d'))
+            rec=bankreceipt.objects.filter(instdate__gte=next_month_start,instdate__lte=next_month_end,ledger=id)
+            print(rec)
+    return render(request,'receiptbank.html')
 
 
 
