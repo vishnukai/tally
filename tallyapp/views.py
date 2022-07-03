@@ -1,6 +1,5 @@
 
 import datetime
-
 from django.shortcuts import render, redirect
 from tallyapp.models import  Particulars, groups,ledger,bank,contra,payment,account, receipt, transactiontype,Vouchertype
 from django.db.models import Count
@@ -51,7 +50,8 @@ def chequeregister(request):
     # group=groups.objects.get(group="Bank Account")
     
 
-    # led=ledger.objects.filter(group=group.id)          
+    # led=ledger.objects.filter(group=group.id)  
+    # new        
     return render(request,'chequeregister.html',{'l':b,'bak':bak})
 
 
