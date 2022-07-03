@@ -6,13 +6,13 @@
  <div class="col-sm-12">
     <table style="width:1%">
         <thead>
-            <tr>{% if type == "Payment" %}
+            <tr>{% if type.vouchertype == "Payment" %}
                 <th><button style="background-color:#2f516f;border:none;" ><a href="{% url 'changecontra' bak.id %}" style="background-color:#2f516f;color:white;">Contra</a></button></th>
                 <th><button style="background-color:#2f516f;border:none;"><a href="" style="background-color:#2f516f;color:white;">Journal</a></button></th>
                 <th><button style="background-color:#2f516f;border:none;"><a href="{% url 'changerecipt' bak.id %}" style="background-color:#2f516f;color:white;">Receipt</a></button></th>
                 <th><button style="background-color:#2f516f;border:none;"><a href="" style="background-color:#2f516f;color:white;">Sales</a></button></th>
                 <th><button style="background-color:#2f516f;border:none;"><a href="" style="background-color:#2f516f;color:white;">Purchase</a></button></th>
-                {% elif type == "Contra" %}
+                {% elif type.vouchertype == "Contra" %}
                 <th><button style="background-color:#2f516f;border:none;" ><a href="{% url 'changepayment' bak.id %}" style="background-color:#2f516f;color:white;">Payment</a></button></th>
                 
                 <th><button style="background-color:#2f516f;border:none;"><a href="" style="background-color:#2f516f;color:white;">Journal</a></button></th>
@@ -21,7 +21,6 @@
                 <th><button style="background-color:#2f516f;border:none;"><a href="" style="background-color:#2f516f;color:white;">Purchase</a></button></th>
                 {% else %}
                 <th><button style="background-color:#2f516f;border:none;" ><a href="{% url 'changepayment' bak.id %}" style="background-color:#2f516f;color:white;">Payment</a></button></th>
-                
                 <th><button style="background-color:#2f516f;border:none;"><a href="" style="background-color:#2f516f;color:white;">Journal</a></button></th>
                 <th><button style="background-color:#2f516f;border:none;"><a href="{% url 'changecontra' bak.id %}" style="background-color:#2f516f;color:white;">Contra</a></button></th>
                 <th><button style="background-color:#2f516f;border:none;"><a href="" style="background-color:#2f516f;color:white;">Sales</a></button></th>
@@ -34,9 +33,9 @@
 
 
 
-    {% if type == "Contra" %}    
+    {% if type.vouchertype == "Contra" %}    
 <form method="POST" action="{% url 'updateconvertpayment' bak.id %}">
-    {% elif type == "Payment" %}
+    {% elif type.vouchertype == "Payment" %}
     <form method="POST" action="{% url 'updateconvertcontra' bak.id %}">
         {% else %}
         <form method="POST" action="{% url 'updateconvertreceipt' bak.id %}">
@@ -44,12 +43,22 @@
     {% csrf_token %}
     <div class="row">
         <div class="col-sm-6">
-        {% if type == "Contra" %}
-      <h4>{{type}}</h1><h4>No.{{con}}   </h4>
-      {% elif type == "Payment" %}
-      <h4>{{type}}</h1><h4>No.{{con}}   </h4>
+        {% if type.vouchertype == "Contra" %}
+        <h4><textarea name="voucher" rows="1" cols="7" style="resize: none;overflow:hidden;" value="{{type.id}}" readonly>{{type.vouchertype}}
+
+        </textarea>
+    
+    </h4><h4>No.{{con}}   </h4>
+      {% elif type.vouchertype == "Payment" %}
+          <h4><textarea name="voucher" rows="1" cols="7" style="resize: none;overflow:hidden;" value="{{type.id}}" readonly>{{type.vouchertype}}
+
+    </textarea>
+
+</h4><h4>No.{{con}}   </h4>
       {% else %}
-      <h4>{{type}}</h1><h4>No.{{con}}   </h4>
+      <h4>          <h4><textarea name="voucher" rows="1" cols="7" style="resize: none;overflow:hidden;" value="{{type.id}}" readonly>{{type.vouchertype}}
+
+    </textarea></h1><h4>No.{{con}}   </h4>
       {% endif %}
 
     </div>

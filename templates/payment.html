@@ -24,7 +24,11 @@
     {% csrf_token %}
     <div class="row">
         <div class="col-sm-6">
-      <h1>Payment</h1><h4>No.{{con.no}}   </h4>
+            <h4><textarea name="voucher" rows="1" cols="7" style="resize: none;overflow:hidden;" value="{{bak.vouchertype.id}}" readonly>{{bak.vouchertype.vouchertype}}
+
+            </textarea>
+      
+            <h4>No.{{con.no}}   </h4>
     </div>
     <div class="col-sm-6" style="text-align:right">
         <h4><input name="date" type="date" value="{{bak.date.date|date:"Y-m-d" }}"></h4>

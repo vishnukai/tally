@@ -9,9 +9,9 @@
     <table style="width:1%">
         <thead>
             <tr>
-                <th><button style="background-color:#2f516f;border:none;" ><a href="{% url 'changepayment' bak.id %}" style="background-color:#2f516f;color:white;">Payment</a></button></th>
+                <th><button style="background-color:#2f516f;border:none;" ><a href="" style="background-color:#2f516f;color:white;">Payment</a></button></th>
                 
-                <th><button style="background-color:#2f516f;border:none;"><a href="{% url 'changerecipt' bak.id %}" style="background-color:#2f516f;color:white;">Receipt</a></button></th>
+                <th><button style="background-color:#2f516f;border:none;"><a href="" style="background-color:#2f516f;color:white;">Contra</a></button></th>
                
                 <th><button style="background-color:#2f516f;border:none;"><a  style="background-color:#2f516f;color:white;">Purchase</a></button></th>
                 <th><button style="background-color:#2f516f;border:none;"><a  style="background-color:#2f516f;color:white;">Journal</a></button></th>
@@ -19,19 +19,15 @@
             </tr>
         </thead>
     </table><br>
-    <form method="POST" action="{% url 'updatepayment' bak.id %}">
+    <form method="POST" action="{% url 'editreceipt' rec.id %}">
         {% csrf_token %}
     <div class="row">
         <div class="col-sm-6">
-      <h4><textarea name="voucher" rows="1" cols="7" style="resize: none;overflow:hidden;" value="{{bak.vouchertype.id}}" readonly>{{bak.vouchertype.vouchertype}}
-
-      </textarea>
-
-      <h4>No.{{con.no}}   </h4>
+      <h1>Receipt</h1><h4>No.{{con.no}}   </h4>
     </div>
     <div class="col-sm-6" style="text-align:right">
-        <h4><input name="date" type="date" value="{{bak.date.date|date:"Y-m-d" }}"></h4>
-        <h4>{{bak.date.date | date:"l"}}</h4>
+        <h4><input name="date" type="date" value="{{rec.date.date|date:"Y-m-d" }}"></h4>
+        <h4>{{rec.date.date | date:"l"}}</h4>
       
            
       </div>
@@ -41,7 +37,7 @@
     <div class="row">
         <div class="col-sm-12">
         Account:
-        <input list="ledger" name="accot" placeholder="Enter the account" onkeyup="myFunction()" value="{{bak.date.account}}" style="background:#2f516f;border:none;color:white">
+        <input list="ledger" name="accot" placeholder="Enter the account" onkeyup="myFunction()" value="{{rec.date.account}}" style="background:#2f516f;border:none;color:white">
         <datalist id="ledger">
 
           
@@ -87,7 +83,7 @@
    
                 <tr>
                     <th> 
-                     <input list="ledger" name="part" placeholder="Enter the Particulars" onkeyup="myFunction()" value="{{bak.amount.particualrs}}" style="background:#2f516f;border:none;color:white">
+                     <input list="ledger" name="part" placeholder="Enter the Particulars" onkeyup="myFunction()" value="{{rec.amount.particualrs}}" style="background:#2f516f;border:none;color:white">
                      <datalist id="ledger">
            
                        
@@ -112,7 +108,7 @@
                    
                     <th style="text-align:right;">
                         
-                       <input type="integer" value="{{bak.amount.amount}}"  name="amount" style="background:#2f516f;border:none;text-align:right;color:white">
+                       <input type="integer" value="{{rec.amount.amount}}"  name="amount" style="background:#2f516f;border:none;text-align:right;color:white">
                     </th>
                 </tr>
                 <tr>
@@ -122,7 +118,7 @@
                     </th>
                    
                     <th style="text-align:right;">
-                        {{bak.amount.amount}}
+                        {{rec.amount.amount}}
                         
                        
                     </th>
@@ -142,10 +138,6 @@
     </div>
 
 
- </div>   
 
-
-
-</div>
 </form>
 {% endblock %}
