@@ -24,4 +24,7 @@ urlpatterns = [
     path('instrument/<int:id>',views.instrument,name='instrument'),
     path('montlysummary/<int:id>',views.monthlysummary,name='montlysummary'),
     path('getjune/<int:id>',views.getjune,name='getjune'),
+    path('getjuly/<int:id>',views.getjuly,name='getjuly'),
+    path('editreceipt/<int:id>',views.editreceipt,name='editreceipt'),
+
 ]

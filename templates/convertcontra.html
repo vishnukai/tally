@@ -44,21 +44,32 @@
     <div class="row">
         <div class="col-sm-6">
         {% if type.vouchertype == "Contra" %}
-        <h4><textarea name="voucher" rows="1" cols="7" style="resize: none;overflow:hidden;" value="{{type.id}}" readonly>{{type.vouchertype}}
-
-        </textarea>
+        <h4>
+        <select name="voucher" style="resize: none;overflow:hidden;appearance: none;">
+            <option value="{{type.id}}">{{type.vouchertype}}
+    
+            </option>
+        </select>
     
     </h4><h4>No.{{con}}   </h4>
       {% elif type.vouchertype == "Payment" %}
-          <h4><textarea name="voucher" rows="1" cols="7" style="resize: none;overflow:hidden;" value="{{type.id}}" readonly>{{type.vouchertype}}
+          <h4>
+    <select name="voucher" style="resize: none;overflow:hidden;appearance: none;">
+        <option value="{{type.id}}">{{type.vouchertype}}
 
-    </textarea>
+        </option>
+    </select>
 
 </h4><h4>No.{{con}}   </h4>
       {% else %}
-      <h4>          <h4><textarea name="voucher" rows="1" cols="7" style="resize: none;overflow:hidden;" value="{{type.id}}" readonly>{{type.vouchertype}}
+                <h4>
+    <select name="voucher" style="resize: none;overflow:hidden;appearance: none;">
+        <option value="{{type.id}}">{{type.vouchertype}}
 
-    </textarea></h1><h4>No.{{con}}   </h4>
+        </option>
+    </select>
+    </h4>
+    <h4>No.{{con}}   </h4>
       {% endif %}
 
     </div>

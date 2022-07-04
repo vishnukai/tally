@@ -76,7 +76,12 @@ def chequep(request,id):
     sum=0
     led=ledger.objects.get(id=id)
     uid=led.id
-    bak=bank.objects.filter(ledger=uid).filter(Q(vouchertype='1')|Q (vouchertype='2')).filter(transactiontype=1)
+    tran=transactiontype.objects.all()
+    for t in tran:
+        if t.transactiontype=="Cheque":
+            tid=t.id
+
+    bak=bank.objects.filter(ledger=uid).filter(Q(vouchertype='1')|Q (vouchertype='2')).filter(transactiontype=tid)
     back=bak
     for  back in back:
         b=back.amount.amount
@@ -94,12 +99,16 @@ def voucher(request,id):
         led=ledger.objects.all()     
         return render(request,'voucher.html',{'bak':bak,'con':con,'led':led})
        
-    else:
+    elif payment.objects.filter(amount=uid).exists():
          con=payment.objects.get(amount=uid)
          led=ledger.objects.all()
          return render(request,'payment.html',{'bak':bak,'con':con,'led':led})
-# else:
-#     return redirect('chequep',id)
+    else:
+        con=receipt.objects.get(amount=uid)
+        led=ledger.objects.all()
+        return render(request,'receipt.html',{'bak':bak,'con':con,'led':led})
+
+
 
 
 def updatepayment(request,id):
@@ -111,17 +120,13 @@ def updatepayment(request,id):
         bid=bak.id
         pid=bak.date.id
         aid=bak.amount.id
-        
         accot=account.objects.get(id=pid)
         part=Particulars.objects.get(id=aid)
-
-
         accod=request.POST.get('accot')
         partd=request.POST.get('part')
-        
         ledaccount=ledger.objects.get(name=accod)
         ledparticulars=ledger.objects.get(name=partd)
-             
+
         if partd is None:
             messages.info(request,'Enter the particulars')
             return redirect('voucher', bid)       
@@ -136,6 +141,7 @@ def updatepayment(request,id):
             con=contra.objects.get(amount=aid)
             cond=contra.objects.get(id=con.id)
             part.amount=request.POST.get('amount')
+
             accot.account=ledaccount
             date=request.POST.get('date')
             accot.date=date
@@ -147,6 +153,7 @@ def updatepayment(request,id):
             dateid=accot
             cond.date=dateid
             cond.amount=amountid
+            cond.ledger=ledaccount
             cond.save()
             bak.ledger=ledaccount
             bak.amount=part
@@ -169,6 +176,7 @@ def updatepayment(request,id):
             part.save()
             dateid=accot
             amountid=part
+            payd.ledger=ledaccount
             payd.date=dateid
             payd.amount=amountid
             payd.save()
@@ -198,7 +206,7 @@ def savebank(request,id):
         trans=transactiontype.objects.get(transactiontype=transaction)
         bak.transactiontype=trans
         bak.save()
-        return redirect('chequep',pd)
+        return redirect('home')
 
 def changecontra(request,id):
     bak=bank.objects.get(id=id)
@@ -264,8 +272,8 @@ def updateconvertpayment(request,id):
      if contra.objects.filter(amount=bak.amount).exists():
         return redirect('updatepayment',id)
      elif payment.objects.filter(amount=bak.amount).exists():
-        # p=payment.objects.get(amount=bak.amount)
-        # p.delete()
+        p=payment.objects.get(amount=bak.amount)
+        p.delete()
         try:
             con=contra.objects.all().last()
             no=con.no+1
@@ -274,13 +282,14 @@ def updateconvertpayment(request,id):
         bak=bank.objects.get(id=id)
         bid=bak.id
         pid=bak.date.id
-        aid=bak.amount.id 
-
-                
+        aid=bak.amount.id                
         accot=account.objects.get(id=pid)
         part=Particulars.objects.get(id=aid)
         accod=request.POST.get('accot')
         partd=request.POST.get('part')
+        voucher=request.POST.get('voucher')
+        print(voucher)
+        v=Vouchertype.objects.get(id=voucher)
         ledaccount=ledger.objects.get(name=accod)
         ledparticulars=ledger.objects.get(name=partd)
         date=request.POST.get('date')
@@ -292,16 +301,48 @@ def updateconvertpayment(request,id):
         part.save()
         amountid=part
         dateid=accot
-        vid=request.POST.get('voucher')   
-        v=Vouchertype.objects.all()
-        for v in v:
-            if v.vouchertype == vid:
-                zid=v.id
-        print(zid)
-
-        con=contra(vouchertype=zid,ledger=ledaccount,no=no,amount=amountid,date=dateid)
+        con=contra(vouchertype=v,ledger=ledaccount,no=no,amount=amountid,date=dateid)
         con.save()
-        bak.vouchertype=zid
+        bak.vouchertype=v
+        bak.ledger=ledaccount
+        bak.amount=part
+        bak.date=accot
+        bak.save()
+        return redirect('bankall', id)
+
+     else:
+        p=receipt.objects.get(amount=bak.amount)
+        p.delete()
+        try:
+            con=contra.objects.all().last()
+            no=con.no+1
+        except:
+            no=1   
+        bak=bank.objects.get(id=id)
+        bid=bak.id
+        pid=bak.date.id
+        aid=bak.amount.id                
+        accot=account.objects.get(id=pid)
+        part=Particulars.objects.get(id=aid)
+        accod=request.POST.get('accot')
+        partd=request.POST.get('part')
+        voucher=request.POST.get('voucher')
+        print(voucher)
+        v=Vouchertype.objects.get(id=voucher)
+        ledaccount=ledger.objects.get(name=accod)
+        ledparticulars=ledger.objects.get(name=partd)
+        date=request.POST.get('date')
+        part.amount=request.POST.get('amount')
+        accot.account=ledaccount
+        accot.date=date
+        part.particualrs=ledparticulars
+        accot.save()
+        part.save()
+        amountid=part
+        dateid=accot
+        con=contra(vouchertype=v,ledger=ledaccount,no=no,amount=amountid,date=dateid)
+        con.save()
+        bak.vouchertype=v
         bak.ledger=ledaccount
         bak.amount=part
         bak.date=accot
@@ -309,13 +350,14 @@ def updateconvertpayment(request,id):
         return redirect('bankall', id)
 
 
+
 def updateconvertcontra(request,id):
      bak=bank.objects.get(id=id)
      if payment.objects.filter(amount=bak.amount).exists():
         return redirect('updatepayment',id)
      elif contra.objects.filter(amount=bak.amount).exists():
-        # p=contra.objects.get(amount=bak.amount)
-        # p.delete()
+        p=contra.objects.get(amount=bak.amount)
+        p.delete()
         try:
             con=payment.objects.all().last()
             no=con.no+1   
@@ -327,11 +369,50 @@ def updateconvertcontra(request,id):
         aid=bak.amount.id      
         accot=account.objects.get(id=pid)
         part=Particulars.objects.get(id=aid)
-        vid=request.POST.get('voucher')   
-          
-
+        voucher=request.POST.get('voucher')  
+        v=Vouchertype.objects.get(id=voucher) 
         accod=request.POST.get('accot')
         partd=request.POST.get('part')
+        
+        
+        ledaccount=ledger.objects.get(name=accod)
+        ledparticulars=ledger.objects.get(name=partd)
+        date=request.POST.get('date')
+        part.amount=request.POST.get('amount')
+        accot.account=ledaccount
+        accot.date=date
+        part.particualrs=ledparticulars
+        accot.save()
+        part.save()
+        amountid=part
+        dateid=accot       
+        con=payment(vouchertype=v,ledger=ledaccount,no=no,amount=amountid,date=dateid)
+        con.save()
+        bak.vouchertype=v
+        bak.ledger=ledaccount
+        bak.amount=part
+        bak.date=accot
+        bak.save()
+        return redirect('bankall', id)
+     else:
+        p=receipt.objects.get(amount=bak.amount)
+        p.delete()
+        try:
+            con=contra.objects.all().last()
+            no=con.no+1
+        except:
+            no=1   
+        bak=bank.objects.get(id=id)
+        bid=bak.id
+        pid=bak.date.id
+        aid=bak.amount.id                
+        accot=account.objects.get(id=pid)
+        part=Particulars.objects.get(id=aid)
+        accod=request.POST.get('accot')
+        partd=request.POST.get('part')
+        voucher=request.POST.get('voucher')
+        print(voucher)
+        v=Vouchertype.objects.get(id=voucher)
         ledaccount=ledger.objects.get(name=accod)
         ledparticulars=ledger.objects.get(name=partd)
         date=request.POST.get('date')
@@ -343,14 +424,9 @@ def updateconvertcontra(request,id):
         part.save()
         amountid=part
         dateid=accot
-        v=Vouchertype.objects.get(vouchertype=vid)
-        for v in v:
-            if v.vouchertype == vid:
-                zid=v.id
-       
-        con=payment(vouchertype=v.id,ledger=ledaccount,no=no,amount=amountid,date=dateid)
+        con=payment(vouchertype=v,ledger=ledaccount,no=no,amount=amountid,date=dateid)
         con.save()
-        bak.vouchertype=zid
+        bak.vouchertype=v
         bak.ledger=ledaccount
         bak.amount=part
         bak.date=accot
@@ -370,10 +446,6 @@ def updateconvertreceipt(request,id):
             accod=request.POST.get('accot')
             partd=request.POST.get('part')
             vid=request.POST.get('voucher')
-            v=Vouchertype.objects.all()
-            for v in v:
-                if v.vouchertype == vid:
-                   zid=v.id
             ledaccount=ledger.objects.get(name=accod)
             ledparticulars=ledger.objects.get(name=partd)
             date=request.POST.get('date')
@@ -384,15 +456,17 @@ def updateconvertreceipt(request,id):
             accot.save()
             part.save()
             amountid=part
-            dateid=accot
+            dateid=accot            
+            voucher=request.POST.get('voucher')  
+            v=Vouchertype.objects.get(id=voucher) 
             try:
                 recpt=receipt.objects.all().last()
                 no=recpt.no+1
             except:
                 no=1
-            rec=receipt(vouchertype=zid,ledger=ledaccount,no=no,date=dateid,amount=amountid)
+            rec=receipt(vouchertype=v,ledger=ledaccount,no=no,date=dateid,amount=amountid)
             rec.save()
-            bak.vouchertype=zid
+            bak.vouchertype=v
             bak.save()
             
             return redirect('bankall',id)
@@ -479,7 +553,15 @@ def instrument(request,id):
 
             
 def monthlysummary(request, id):
-    a=bank.objects.filter(ledger=id).values_list('id','instdate')
+
+    trans=Vouchertype.objects.all()
+    for t in trans:
+        if t.vouchertype=="Receipt":
+            tid=t.id
+
+
+
+    a=bank.objects.filter(ledger=id).values_list('id','instdate').filter(vouchertype=tid)
     print(a)
     b=dict(a)
     print(b)
@@ -630,7 +712,7 @@ def monthlysummary(request, id):
         else:
             pass
     print(month)
-    amount=bank.objects.filter(ledger=id).values('instdate','amount')
+    amount=bank.objects.filter(ledger=id).values('instdate','amount').filter(vouchertype=tid)
     
     
    
@@ -828,14 +910,86 @@ def getjune(request,id):
         for n in range(0,1):
             next_month_start = d + relativedelta.relativedelta(months=m, day=1)
             next_month_end = d + relativedelta.relativedelta(months=n, day=30)
-            print(next_month_start.strftime('%Y-%m-%d'))
-            print(next_month_end.strftime('%Y-%m-%d'))
-            rec=bank.objects.filter(instdate__gte=next_month_start,instdate__lte=next_month_end,ledger=id)
+        
+            trans=Vouchertype.objects.all()
+            for t in trans:
+                if t.vouchertype=="Receipt":
+                    tid=t.id 
+                    
+            rec=bank.objects.filter(instdate__gte=next_month_start,instdate__lte=next_month_end,ledger=id).filter(vouchertype=tid)
             print(rec)
     return render(request,'receiptbank.html')
 
+def getjuly(request,id):
+    fiscalyear.setup_fiscal_calendar(start_month=7)
+    fy = FiscalYear.current()
+    current_fiscal_year = FiscalYear.current()
+    d = datetime.datetime(current_fiscal_year.start.year, current_fiscal_year.start.month, current_fiscal_year.start.day)
+    for m in range(0, 1):
+        for n in range(0,1):
+            next_month_start = d + relativedelta.relativedelta(months=m, day=1)
+            next_month_end = d + relativedelta.relativedelta(months=n, day=31)
+            print(next_month_end)
+            trans=Vouchertype.objects.all()
+            for t in trans:
+                if t.vouchertype=="Receipt":
+                    tid=t.id 
+                    
+            rec=bank.objects.filter(instdate__gte=next_month_start,instdate__lte=next_month_end,ledger=id).filter(vouchertype=tid)
+            print(rec)
+            
+    return render(request,'receiptbank.html',{'rec':rec})
 
 
+def editreceipt(request,id):
+        if request.method=="POST":
+            bak=bank.objects.get(id=id)
+            uid=bak.ledger.id
+            led=ledger.objects.get(id=uid)
+            nid=led.id
+            bid=bak.id
+            pid=bak.date.id
+            aid=bak.amount.id
+            accot=account.objects.get(id=pid)
+            part=Particulars.objects.get(id=aid)
+            accod=request.POST.get('accot')
+            partd=request.POST.get('part')
+            ledaccount=ledger.objects.get(name=accod)
+            ledparticulars=ledger.objects.get(name=partd)
+
+            if partd is None:
+                messages.info(request,'Enter the particulars')
+                return redirect('voucher', bid)       
+            elif accod is None: 
+                messages.info(request,'Enter the account')
+                return redirect('voucher', bid) 
+            elif request.POST.get('amount') is None:
+                messages.info(request,'Enter the amount')
+                return redirect('voucher', bid)
+
+            elif receipt.objects.filter(amount=aid).exists():
+                con=receipt.objects.get(amount=aid)
+                cond=receipt.objects.get(id=con.id)
+                part.amount=request.POST.get('amount')
+
+                accot.account=ledaccount
+                date=request.POST.get('date')
+                accot.date=date
+                
+                part.particualrs=ledparticulars
+                accot.save()
+                part.save()
+                amountid=part
+                dateid=accot
+                cond.date=dateid
+                cond.amount=amountid
+                cond.ledger=ledaccount
+                cond.save()
+                bak.ledger=ledaccount
+                bak.amount=part
+                bak.date=accot
+                bak.save()
+                return redirect('bankall', id)
 
 
 
