@@ -12,13 +12,12 @@
 
   </tr>
   <tr  >
-    <th style=" border: 1px solid #fff;border-collapse: collapse; padding: 15px;text-align: center;" colspan="4">{{bak.ledger.name}}<br> Company name <br>1-Apr-2022 to 31-Mar-23 </th>
-
+    {% for bak in bak|slice:":1" %}
     
     
-
-   
-
+ 
+    <th style=" border: 1px solid #fff;border-collapse: collapse; padding: 15px;text-align: center;" colspan="4">{{bak.ledger.name}}<br> Company name <br>Current Financial Year : {{s}} to {{new}}</th>   
+    {% endfor %}
   </tr>
 
 
@@ -58,10 +57,10 @@
             {{month.5}}
         </td>
         <td style=" border-left:0px;border-bottom:1px solid #fff;border-collapse: collapse; padding: 15px;text-align: center;">
-            40000
+          {{newtotal.5}}
         </td> 
         <td style=" border-left:0px;border-bottom:1px solid #fff;border-collapse: collapse; padding: 15px;text-align: center;">
-            40000
+          {{newmonth.5}}
         </td>
     </tr>
     <tr>
@@ -79,10 +78,10 @@
         {{month.6}}
       </td>
       <td style=" border-left:0px;border-bottom:1px solid #fff;border-collapse: collapse; padding: 15px;text-align: center;">
-          40000
+        {{newtotal.6}}
       </td> 
       <td style=" border-left:0px;border-bottom:1px solid #fff;border-collapse: collapse; padding: 15px;text-align: center;">
-          40000
+        {{newmonth.6}}
       </td>
   </tr>
   <tr>
@@ -99,10 +98,10 @@
       {{month.7}}
     </td>
     <td style=" border-left:0px;border-bottom:1px solid #fff;border-collapse: collapse; padding: 15px;text-align: center;">
-        40000
+      {{newtotal.7}}
     </td> 
     <td style=" border-left:0px;border-bottom:1px solid #fff;border-collapse: collapse; padding: 15px;text-align: center;">
-        40000
+      {{newmonth.7}}
     </td>
 </tr>
 <tr>
@@ -120,10 +119,10 @@
     {{month.8}}
   </td>
   <td style=" border-left:0px;border-bottom:1px solid #fff;border-collapse: collapse; padding: 15px;text-align: center;">
-      40000
+    {{newtotal.8}}
   </td> 
   <td style=" border-left:0px;border-bottom:1px solid #fff;border-collapse: collapse; padding: 15px;text-align: center;">
-      40000
+    {{newmonth.8}}
   </td>
 </tr>
 <tr>
@@ -141,10 +140,10 @@
     {{month.9}}
   </td>
   <td style=" border-left:0px;border-bottom:1px solid #fff;border-collapse: collapse; padding: 15px;text-align: center;">
-      40000
+    {{newtotal.9}}
   </td> 
   <td style=" border-left:0px;border-bottom:1px solid #fff;border-collapse: collapse; padding: 15px;text-align: center;">
-      40000
+    {{newmonth.9}}
   </td>
 </tr>
 <tr>
@@ -162,10 +161,10 @@
     {{month.10}}
   </td>
   <td style=" border-left:0px;border-bottom:1px solid #fff;border-collapse: collapse; padding: 15px;text-align: center;">
-      40000
+    {{newtotal.10}}
   </td> 
   <td style=" border-left:0px;border-bottom:1px solid #fff;border-collapse: collapse; padding: 15px;text-align: center;">
-      40000
+    {{newmonth.10}}
   </td>
 </tr>
 <tr>
@@ -183,10 +182,10 @@
     {{month.11}}
   </td>
   <td style=" border-left:0px;border-bottom:1px solid #fff;border-collapse: collapse; padding: 15px;text-align: center;">
-      40000
+    {{newtotal.11}}
   </td> 
   <td style=" border-left:0px;border-bottom:1px solid #fff;border-collapse: collapse; padding: 15px;text-align: center;">
-      40000
+    {{newmonth.11}}
   </td>
 </tr>
 <tr>
@@ -204,10 +203,10 @@
     {{month.12}}
   </td>
   <td style=" border-left:0px;border-bottom:1px solid #fff;border-collapse: collapse; padding: 15px;text-align: center;">
-      40000
+    {{newtotal.12}}
   </td> 
   <td style=" border-left:0px;border-bottom:1px solid #fff;border-collapse: collapse; padding: 15px;text-align: center;">
-      40000
+    {{newmonth.12}}
   </td>
 </tr>
 <tr>
@@ -225,10 +224,10 @@
     {{month.1}}
   </td>
   <td style=" border-left:0px;border-bottom:1px solid #fff;border-collapse: collapse; padding: 15px;text-align: center;">
-      40000
+    {{newtotal.1}}
   </td> 
   <td style=" border-left:0px;border-bottom:1px solid #fff;border-collapse: collapse; padding: 15px;text-align: center;">
-      40000
+    {{newmonth.1}}
   </td>
 </tr>
 <tr>
@@ -246,10 +245,10 @@
     {{month.2}}
   </td>
   <td style=" border-left:0px;border-bottom:1px solid #fff;border-collapse: collapse; padding: 15px;text-align: center;">
-      40000
+    {{newtotal.2}}    
   </td> 
   <td style=" border-left:0px;border-bottom:1px solid #fff;border-collapse: collapse; padding: 15px;text-align: center;">
-      40000
+    {{newmonth.2}}
   </td>
 </tr>
 <tr>
@@ -267,10 +266,10 @@
     {{month.3}}
   </td>
   <td style=" border-left:0px;border-bottom:1px solid #fff;border-collapse: collapse; padding: 15px;text-align: center;">
-    0
+    {{newtotal.3}} 
   </td> 
   <td style=" border-left:0px;border-bottom:1px solid #fff;border-collapse: collapse; padding: 15px;text-align: center;">
-      40000
+    {{newmonth.3}} 
   </td>
 </tr>
 <tr>
@@ -288,10 +287,10 @@
     {{month.4}}
   </td>
   <td style=" border-left:0px;border-bottom:1px solid #fff;border-collapse: collapse; padding: 15px;text-align: center;">
-      40000
+    {{newtotal.4}}
   </td> 
   <td style=" border-left:0px;border-bottom:1px solid #fff;border-collapse: collapse; padding: 15px;text-align: center;">
-      40000
+    {{newmonth.4}}
   </td>
 </tr>
 
