@@ -35,11 +35,13 @@ def chequeregister(request):
     for t in t:
         if t.transactiontype=="Cheque":
             tid=t.id
-
+    todays_date = datetime.date.today()
     b=bank.objects.filter(Q(vouchertype=vid)|Q (vouchertype=pid)).filter(transactiontype=tid).values('ledger').annotate(total=Count('ledger'))
+    c=bank.objects.filter(Q(vouchertype=vid)|Q (vouchertype=pid)).filter(transactiontype=tid).filter(instdate__lte=todays_date).values('ledger').annotate(total=Count('ledger'))
+    print(c)
     print(b)
     bak=ledger.objects.all()
-
+   
     # bak=list(b)
     # a_list = []     
 
@@ -65,7 +67,7 @@ def chequeregister(request):
 
     # led=ledger.objects.filter(group=group.id)  
     # new        
-    return render(request,'chequeregister.html',{'l':b,'bak':bak})
+    return render(request,'chequeregister.html',{'l':b,'bak':bak,'c':c})
 
 
 
@@ -98,7 +100,7 @@ def chequep(request,id):
         if t.transactiontype=="Cheque":
             tid=t.id
 
-    bak=bank.objects.filter(Q(vouchertype=vid)|Q (vouchertype=pid)).filter(transactiontype=tid)
+    bak=bank.objects.filter(Q(vouchertype=vid)|Q (vouchertype=pid)).filter(transactiontype=tid).filter(ledger=uid)
     back=bak
     for  back in back:
         b=back.amount.amount
@@ -231,7 +233,8 @@ def changecontra(request,id):
     con=contra.objects.all().last()
     try:
         if contra.objects.filter(amount=bak.amount).exists():
-            no=con.no 
+            new=contra.objects.get(amount=bak.amount)
+            no=new.no 
         else:
             no=con.no+1 
     except:
@@ -250,7 +253,8 @@ def changepayment(request,id):
     con=payment.objects.all().last()
     try:
         if payment.objects.filter(amount=bak.amount).exists():
-            no=con.no 
+            new=payment.objects.get(amount=bak.amount)
+            no=new.no 
         else:
             no=con.no+1
     except:
@@ -272,7 +276,8 @@ def changerecipt(request,id):
     con=receipt.objects.all().last()
     try:
         if receipt.objects.filter(amount=bak.amount).exists():
-           no=con.no 
+           new=receipt.objects.get(amount=bak.amount)
+           no=new.no
         else:
            no=con.no+1
     except:
@@ -552,8 +557,21 @@ def savereceiptbank(request,id):
         return redirect('home')
 
 def instrument(request,id):
+    v=Vouchertype.objects.all()
+    for v in v:
+        if v.vouchertype=="Contra":
+            vid=v.id
+        elif v.vouchertype=="Payment":
+            pid=v.id
+        else:
+            pass
+
+    t=transactiontype.objects.all()
+    for t in t:
+        if t.transactiontype=="Cheque":
+            tid=t.id
     sum=0
-    bak=bank.objects.filter(ledger=id)
+    bak=bank.objects.filter(Q(vouchertype=vid)|Q (vouchertype=pid)).filter(transactiontype=tid).filter(ledger=id)
     back=bak
     con=contra.objects.all()
     pay=payment.objects.all()
@@ -595,32 +613,32 @@ def monthlysummary(request, id):
          newtotal[i]=0
          for course in newamount:
             if i==(course['instdate'].month):
-                if (course['instdate'].month)>todays_date.month:
+                if (course['instdate'])>=todays_date:
                     e=course['amount']
                     par=Particulars.objects.get(id=e)
                     newj=newj+par.amount
                     newtotal[i]=newj
-                elif (course['instdate'].day)>=todays_date.day:
-                    e=course['amount']
-                    par=Particulars.objects.get(id=e)
-                    newj=newj+par.amount
-                    newtotal[i]=newj
-                else:
-                    pass
+                # elif (course['instdate'].day)>=todays_date.day:
+                #     e=course['amount']
+                #     par=Particulars.objects.get(id=e)
+                #     newj=newj+par.amount
+                #     newtotal[i]=newj
+                # else:
+                #     pass
     newmonth={}
     for i in range(1,13):
         newjan=0
         newmonth[i]=0
         for keys, values in newb.items():
             if i==values.month:
-                if values.month > todays_date.month:
+                if values >= todays_date:
                     newjan=newjan+1
                     newmonth[i]=newjan
-                elif values.day>=todays_date.day:
-                    newjan=newjan+1
-                    newmonth[i]=newjan
-                else:
-                    pass
+                # elif values.day>=todays_date.day:
+                #     newjan=newjan+1
+                #     newmonth[i]=newjan
+                # else:
+                #     pass
     
     todays_date = datetime.date.today()
     fiscalyear.setup_fiscal_calendar(start_month=4)
@@ -639,14 +657,14 @@ def monthlysummary(request, id):
         month[i]=0
         for keys, values in b.items():
             if i==values.month:
-                if values.month > todays_date.month:
+                if values >= todays_date:
                     jan=jan+1
                     month[i]=jan
-                elif values.day>=todays_date.day:
-                    jan=jan+1
-                    month[i]=jan
-                else:
-                    pass
+                # elif values.day>=todays_date.day:
+                #     jan=jan+1
+                #     month[i]=jan
+                # else:
+                #     pass
 
     amount=bank.objects.filter(ledger=id).values('instdate','amount').filter(vouchertype=tid)
     total={}
@@ -656,18 +674,18 @@ def monthlysummary(request, id):
         total[i]=0
         for course in amount:
             if i==(course['instdate'].month):
-                if (course['instdate'].month)>todays_date.month:
+                if (course['instdate'])>=todays_date:
                     e=course['amount']
                     par=Particulars.objects.get(id=e)
                     j=j+par.amount
                     total[i]=j
-                elif (course['instdate'].day)>=todays_date.day:
-                    e=course['amount']
-                    par=Particulars.objects.get(id=e)
-                    j=j+par.amount
-                    total[i]=j
-                else:
-                    pass
+                # elif (course['instdate'].day)>=todays_date.day:
+                #     e=course['amount']
+                #     par=Particulars.objects.get(id=e)
+                #     j=j+par.amount
+                #     total[i]=j
+                # else:
+                #     pass
 
     fiscalyear.setup_fiscal_calendar(start_month=4)
     fy = FiscalYear.current()
@@ -686,13 +704,13 @@ def monthlysummary(request, id):
     return render(request,'montlysummary.html',{'month':month,'total':total,'bak':bak,'id':id,'s':s,'new':new,'newmonth':newmonth,'newtotal':newtotal})
 
 def getjune(request,id):
-    fiscalyear.setup_fiscal_calendar(start_month=6)
+    fiscalyear.setup_fiscal_calendar(start_month=4)
     fy = FiscalYear.current()
     current_fiscal_year = FiscalYear.current()
     todays_date = datetime.date.today()
     d = datetime.datetime(current_fiscal_year.start.year, current_fiscal_year.start.month, current_fiscal_year.start.day)
-    for m in range(0, 1):
-        for n in range(0,1):
+    for m in range(2, 3):
+        for n in range(2,3):
             next_month_start = d + relativedelta.relativedelta(months=m, day=1)
             next_month_end = d + relativedelta.relativedelta(months=n, day=30)
         
@@ -701,12 +719,219 @@ def getjune(request,id):
                 if t.vouchertype=="Receipt":
                     tid=t.id 
                     
-            rec=bank.objects.filter(instdate__gte=todays_date,instdate__lte=next_month_end,ledger=id).filter(vouchertype=tid)
+            rec=bank.objects.filter(instdate__gte=next_month_start,instdate__lte=next_month_end,ledger=id).filter(vouchertype=tid)
             print(rec)
     return render(request,'receiptbank.html')
 
 def getjuly(request,id):
-    fiscalyear.setup_fiscal_calendar(start_month=7)
+    fiscalyear.setup_fiscal_calendar(start_month=4)
+    fy = FiscalYear.current()
+
+    current_fiscal_year = FiscalYear.current()
+    d = datetime.datetime(current_fiscal_year.start.year, current_fiscal_year.start.month, current_fiscal_year.start.day)
+    todays_date = datetime.date.today()
+    for m in range(3, 4):
+        for n in range(3,4):
+            next_month_start = d + relativedelta.relativedelta(months=m, day=1)
+            next_month_end = d + relativedelta.relativedelta(months=n, day=31)
+            print(next_month_end)
+            trans=Vouchertype.objects.all()
+            for t in trans:
+                if t.vouchertype=="Receipt":
+                    tid=t.id 
+            rec=bank.objects.filter(instdate__gte=next_month_start,instdate__lte=next_month_end,ledger=id)
+            print(rec)
+            
+    return render(request,'receiptbank.html',{'rec':rec})
+
+
+def editreceipt(request,id):
+
+    if request.method=="POST":
+        bak=bank.objects.get(id=id)
+        uid=bak.ledger.id
+        led=ledger.objects.get(id=uid)
+        nid=led.id
+        bid=bak.id
+        pid=bak.date.id
+        aid=bak.amount.id
+        accot=account.objects.get(id=pid)
+        part=Particulars.objects.get(id=aid)
+        accod=request.POST.get('accot')
+        partd=request.POST.get('part')
+        ledaccount=ledger.objects.get(name=accod)
+        ledparticulars=ledger.objects.get(name=partd)
+
+        if partd is None:
+            messages.info(request,'Enter the particulars')
+            return redirect('voucher', bid)       
+        elif accod is None: 
+            messages.info(request,'Enter the account')
+            return redirect('voucher', bid) 
+        elif request.POST.get('amount') is None:
+            messages.info(request,'Enter the amount')
+            return redirect('voucher', bid)
+
+        elif receipt.objects.filter(amount=aid).exists():
+            con=receipt.objects.get(amount=aid)
+            cond=receipt.objects.get(id=con.id)
+            part.amount=request.POST.get('amount')
+
+            accot.account=ledaccount
+            date=request.POST.get('date')
+            accot.date=date
+            
+            part.particualrs=ledparticulars
+            accot.save()
+            part.save()
+            amountid=part
+            dateid=accot
+            cond.date=dateid
+            cond.amount=amountid
+            cond.ledger=ledaccount
+            cond.save()
+            bak.ledger=ledaccount
+            bak.amount=part
+            bak.date=accot
+            bak.save()
+            return redirect('bankall', id)
+
+
+
+def getaugust(request,id):
+    fiscalyear.setup_fiscal_calendar(start_month=4)
+    fy = FiscalYear.current()
+    print(fy)
+    current_fiscal_year = FiscalYear.current()
+    d = datetime.datetime(current_fiscal_year.start.year, current_fiscal_year.start.month, current_fiscal_year.start.day)
+    todays_date = datetime.date.today()
+    for m in range(4, 5):
+        for n in range(4,5):
+            next_month_start = d + relativedelta.relativedelta(months=m, day=1)
+            next_month_end = d + relativedelta.relativedelta(months=n, day=31)
+            print(next_month_end)
+            print(todays_date)
+            trans=Vouchertype.objects.all()
+            for t in trans:
+                if t.vouchertype=="Receipt":
+                    tid=t.id 
+            rec=bank.objects.filter(instdate__gte=next_month_start,instdate__lte=next_month_end,ledger=id)
+            print(rec)
+            
+    return render(request,'receiptbank.html',{'rec':rec})
+
+def getseptember(request,id):
+    fiscalyear.setup_fiscal_calendar(start_month=4)
+    fy = FiscalYear.current()
+
+    current_fiscal_year = FiscalYear.current()
+    d = datetime.datetime(current_fiscal_year.start.year, current_fiscal_year.start.month, current_fiscal_year.start.day)
+    todays_date = datetime.date.today()
+    for m in range(5, 6):
+        for n in range(5,6):
+            next_month_start = d + relativedelta.relativedelta(months=m, day=1)
+            next_month_end = d + relativedelta.relativedelta(months=n, day=31)
+            print(next_month_end)
+            trans=Vouchertype.objects.all()
+            for t in trans:
+                if t.vouchertype=="Receipt":
+                    tid=t.id 
+            rec=bank.objects.filter(instdate__gte=next_month_start,instdate__lte=next_month_end,ledger=id)
+            print(rec)
+            
+    return render(request,'receiptbank.html',{'rec':rec})
+
+
+def getoctober(request,id):
+    fiscalyear.setup_fiscal_calendar(start_month=4)
+    fy = FiscalYear.current()
+
+    current_fiscal_year = FiscalYear.current()
+    d = datetime.datetime(current_fiscal_year.start.year, current_fiscal_year.start.month, current_fiscal_year.start.day)
+    todays_date = datetime.date.today()
+    for m in range(6, 7):
+        for n in range(6,7):
+            next_month_start = d + relativedelta.relativedelta(months=m, day=1)
+            next_month_end = d + relativedelta.relativedelta(months=n, day=31)
+            print(next_month_end)
+            trans=Vouchertype.objects.all()
+            for t in trans:
+                if t.vouchertype=="Receipt":
+                    tid=t.id 
+            rec=bank.objects.filter(instdate__gte=next_month_start,instdate__lte=next_month_end,ledger=id)
+            print(rec)
+            
+    return render(request,'receiptbank.html',{'rec':rec})            
+        
+def getnovember(request,id):
+    fiscalyear.setup_fiscal_calendar(start_month=4)
+    fy = FiscalYear.current()
+
+    current_fiscal_year = FiscalYear.current()
+    d = datetime.datetime(current_fiscal_year.start.year, current_fiscal_year.start.month, current_fiscal_year.start.day)
+    todays_date = datetime.date.today()
+    for m in range(7, 8):
+        for n in range(7,8):
+            next_month_start = d + relativedelta.relativedelta(months=m, day=1)
+            next_month_end = d + relativedelta.relativedelta(months=n, day=31)
+            print(next_month_end)
+            trans=Vouchertype.objects.all()
+            for t in trans:
+                if t.vouchertype=="Receipt":
+                    tid=t.id 
+            rec=bank.objects.filter(instdate__gte=next_month_start,instdate__lte=next_month_end,ledger=id)
+            print(rec)
+            
+    return render(request,'receiptbank.html',{'rec':rec})
+            
+
+
+def getdecember(request,id):
+    fiscalyear.setup_fiscal_calendar(start_month=4)
+    fy = FiscalYear.current()
+
+    current_fiscal_year = FiscalYear.current()
+    d = datetime.datetime(current_fiscal_year.start.year, current_fiscal_year.start.month, current_fiscal_year.start.day)
+    todays_date = datetime.date.today()
+    for m in range(7, 8):
+        for n in range(7,8):
+            next_month_start = d + relativedelta.relativedelta(months=m, day=1)
+            next_month_end = d + relativedelta.relativedelta(months=n, day=31)
+            print(next_month_end)
+            trans=Vouchertype.objects.all()
+            for t in trans:
+                if t.vouchertype=="Receipt":
+                    tid=t.id 
+            rec=bank.objects.filter(instdate__gte=next_month_start,instdate__lte=next_month_end,ledger=id)
+            print(rec)
+            
+    return render(request,'receiptbank.html',{'rec':rec})
+
+
+def getjanuary(request,id):
+    fiscalyear.setup_fiscal_calendar(start_month=1)
+    fy = FiscalYear.current()
+
+    current_fiscal_year = FiscalYear.current()
+    d = datetime.datetime(current_fiscal_year.start.year, current_fiscal_year.start.month, current_fiscal_year.start.day)
+    todays_date = datetime.date.today()
+    for m in range(0, 1):
+        for n in range(0, 1):
+            next_month_start = d + relativedelta.relativedelta(months=m, day=1)
+            next_month_end = d + relativedelta.relativedelta(months=n, day=31)
+            print(next_month_end)
+            trans=Vouchertype.objects.all()
+            for t in trans:
+                if t.vouchertype=="Receipt":
+                    tid=t.id 
+            rec=bank.objects.filter(instdate__gte=next_month_start,instdate__lte=next_month_end,ledger=id)
+            print(rec)
+            
+    return render(request,'receiptbank.html',{'rec':rec})
+
+
+def getfebruary(request,id):
+    fiscalyear.setup_fiscal_calendar(start_month=2)
     fy = FiscalYear.current()
 
     current_fiscal_year = FiscalYear.current()
@@ -721,74 +946,70 @@ def getjuly(request,id):
             for t in trans:
                 if t.vouchertype=="Receipt":
                     tid=t.id 
-                    
-            rec=bank.objects.filter(instdate__gte=todays_date,instdate__lte=next_month_end,ledger=id)
+            rec=bank.objects.filter(instdate__gte=next_month_start,instdate__lte=next_month_end,ledger=id)
             print(rec)
             
     return render(request,'receiptbank.html',{'rec':rec})
 
+def getmarch(request,id):
+    fiscalyear.setup_fiscal_calendar(start_month=3)
+    fy = FiscalYear.current()
 
-def editreceipt(request,id):
-        if request.method=="POST":
-            bak=bank.objects.get(id=id)
-            uid=bak.ledger.id
-            led=ledger.objects.get(id=uid)
-            nid=led.id
-            bid=bak.id
-            pid=bak.date.id
-            aid=bak.amount.id
-            accot=account.objects.get(id=pid)
-            part=Particulars.objects.get(id=aid)
-            accod=request.POST.get('accot')
-            partd=request.POST.get('part')
-            ledaccount=ledger.objects.get(name=accod)
-            ledparticulars=ledger.objects.get(name=partd)
-
-            if partd is None:
-                messages.info(request,'Enter the particulars')
-                return redirect('voucher', bid)       
-            elif accod is None: 
-                messages.info(request,'Enter the account')
-                return redirect('voucher', bid) 
-            elif request.POST.get('amount') is None:
-                messages.info(request,'Enter the amount')
-                return redirect('voucher', bid)
-
-            elif receipt.objects.filter(amount=aid).exists():
-                con=receipt.objects.get(amount=aid)
-                cond=receipt.objects.get(id=con.id)
-                part.amount=request.POST.get('amount')
-
-                accot.account=ledaccount
-                date=request.POST.get('date')
-                accot.date=date
-                
-                part.particualrs=ledparticulars
-                accot.save()
-                part.save()
-                amountid=part
-                dateid=accot
-                cond.date=dateid
-                cond.amount=amountid
-                cond.ledger=ledaccount
-                cond.save()
-                bak.ledger=ledaccount
-                bak.amount=part
-                bak.date=accot
-                bak.save()
-                return redirect('bankall', id)
-
-
-
-
-
-
-
+    current_fiscal_year = FiscalYear.current()
+    d = datetime.datetime(current_fiscal_year.start.year, current_fiscal_year.start.month, current_fiscal_year.start.day)
+    todays_date = datetime.date.today()
+    for m in range(0, 1):
+        for n in range(0,1):
+            next_month_start = d + relativedelta.relativedelta(months=m, day=1)
+            next_month_end = d + relativedelta.relativedelta(months=n, day=31)
+            print(next_month_end)
+            trans=Vouchertype.objects.all()
+            for t in trans:
+                if t.vouchertype=="Receipt":
+                    tid=t.id 
+            rec=bank.objects.filter(instdate__gte=next_month_start,instdate__lte=next_month_end,ledger=id)
+            print(rec)
             
-        
+    return render(request,'receiptbank.html',{'rec':rec})
 
+def getapril(request,id):
+    fiscalyear.setup_fiscal_calendar(start_month=4)
+    fy = FiscalYear.current()
 
+    current_fiscal_year = FiscalYear.current()
+    d = datetime.datetime(current_fiscal_year.start.year, current_fiscal_year.start.month, current_fiscal_year.start.day)
+    todays_date = datetime.date.today()
+    for m in range(0, 1):
+        for n in range(0,1):
+            next_month_start = d + relativedelta.relativedelta(months=m, day=1)
+            next_month_end = d + relativedelta.relativedelta(months=n, day=31)
+            print(next_month_end)
+            trans=Vouchertype.objects.all()
+            for t in trans:
+                if t.vouchertype=="Receipt":
+                    tid=t.id 
+            rec=bank.objects.filter(instdate__gte=next_month_start,instdate__lte=next_month_end,ledger=id)
+            print(rec)
             
+    return render(request,'receiptbank.html',{'rec':rec})
 
+def getmay(request,id):
+    fiscalyear.setup_fiscal_calendar(start_month=4)
+    fy = FiscalYear.current()
 
-    
+    current_fiscal_year = FiscalYear.current()
+    d = datetime.datetime(current_fiscal_year.start.year, current_fiscal_year.start.month, current_fiscal_year.start.day)
+    todays_date = datetime.date.today()
+    for m in range(5, 6):
+        for n in range(5,6):
+            next_month_start = d + relativedelta.relativedelta(months=m, day=1)
+            next_month_end = d + relativedelta.relativedelta(months=n, day=31)
+            print(next_month_end)
+            trans=Vouchertype.objects.all()
+            for t in trans:
+                if t.vouchertype=="Receipt":
+                    tid=t.id 
+            rec=bank.objects.filter(instdate__gte=next_month_start,instdate__lte=next_month_end,ledger=id)
+            print(rec)
+            
+    return render(request,'receiptbank.html',{'rec':rec})

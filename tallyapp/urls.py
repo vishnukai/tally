@@ -26,5 +26,16 @@ urlpatterns = [
     path('getjune/<int:id>',views.getjune,name='getjune'),
     path('getjuly/<int:id>',views.getjuly,name='getjuly'),
     path('editreceipt/<int:id>',views.editreceipt,name='editreceipt'),
+    path('getaugust/<int:id>',views.getaugust,name='getaugust'),
+    path('getseptember/<int:id>',views.getseptember,name='getseptember'),
+    path('getoctober/<int:id>',views.getoctober,name='getoctober'),
+    path('getnovember/<int:id>',views.getnovember,name='getnovember'),
+    path('getdecember/<int:id>',views.getdecember,name='getdecember'),
+    path('getjanuary/<int:id>',views.getjanuary,name='getjanuary'),
+    path('getfebruary/<int:id>',views.getfebruary,name='getfebruary'),
+    path('getmarch/<int:id>',views.getmarch,name='getmarch'),
+    path('getapril/<int:id>',views.getapril,name='getapril'),
+    path('getmay/<int:id>',views.getmay,name='getmay'),
+
 
 ]

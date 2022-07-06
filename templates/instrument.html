@@ -35,9 +35,7 @@ Ledger: {{bak.amount.particualrs}}
          Cheque No.
 
         </th>
-        <th>
-           Statuc
-        </th>
+
         <th>
             Date
 
@@ -68,11 +66,9 @@ Ledger: {{bak.amount.particualrs}}
     <tr>
 
         <td>
-            nil
+            {{bank.instno}}
         </td>
-        <td>
-        unreconcilled
-        </td>
+
         <td>
             {{bank.date.date}}
             
@@ -84,15 +80,8 @@ Ledger: {{bak.amount.particualrs}}
         <td>
          {{con.no}}
         </td>
-       
-     
-        
            
-       
-           <td>
-            {{bank.instno}}
-             
-           
+     <td>{{bank.instdate}} 
         </td>
         
         <td >
@@ -108,33 +97,26 @@ Ledger: {{bak.amount.particualrs}}
     <tr>
 
         <td>
-            nil
-        </td>
-        <td>
-        unreconcilled
+            {{bank.instno}}
         </td>
         <td>
             {{bank.date.date}}
-            
         </td>
         <td>
+           
             <a href="{% url 'voucher' bank.id %}">   {{bank.amount.particualrs}}</a> 
         </td>
-         
         <td>
             {{pay.no}}
         </td>
-
-     
-       
-     
-           
-       
-           <td>
-            {{bank.instno}}
-             
+         
+        <td>
+            {{bank.instdate}}
            
         </td>
+           
+       
+ 
         
         <td >
             {{bank.amount.amount}}
@@ -150,7 +132,7 @@ Ledger: {{bak.amount.particualrs}}
  
 
     <tr>
-        <td class="total-column" colspan="6">
+        <td class="total-column" colspan="5">
         Total
         </td>
         <td>
